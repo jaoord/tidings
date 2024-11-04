@@ -1,26 +1,31 @@
 <script setup>
-import store from '../store.js'
+import { store } from '../store.js'
+import supabase from '../supabase'
 
-const posts = store.posts
+const fetchPosts = async () => {
+  let { data: posts, error } = await supabase
+    .from('posts')
+    .select('*')
+
+  store.posts = posts
+}
 
 const getWordCount = (str) => (str.split(' ').length)
-
+fetchPosts()
 </script>
 
 <template>
-    https://www.youtube.com/watch?v=UP2mHUpcv6g
-    <div class="home">
-        <main class="container mx-auto">
+  <div class="home">
+    <main class="container mx-auto">
 
-
-            <div class="post-item mb-4 cursor-pointer" v-for="item, itemIndex in posts" :key="itemIndex"
-                @click="$router.push(`/post/${item.id}`)">
-                <h2 class="text-slate-900 text-2xl font-bold">{{ item.title }}</h2>
-                <p>{{ getWordCount(item.description) }} words | published {{ item.date }}</p>
-            </div>
-
-        </main>
-
-    </div>
-
+      <div v-if="!store.posts"> There are no posts.</div>
+      <div v-else>
+        <div class=" post-item mb-4 cursor-pointer" v-for="item, itemIndex in store.posts" :key="itemIndex"
+          @click="$router.push(`/post/${item.id}`)">
+          <h2 class="text-slate-900 text-2xl font-bold">{{ item.title }}</h2>
+          <p>{{ getWordCount(item.description) }} words | published {{ item.created_at }}</p>
+        </div>
+      </div>
+    </main>
+  </div>
 </template>
