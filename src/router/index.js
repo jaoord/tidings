@@ -12,6 +12,11 @@ const router = createRouter({
       path: '/post/:id',
       name: 'Post',
       component: () => import('../views/Post.vue')
+    },
+    {
+      path: '/pexels',
+      name: 'Pexels',
+      component: () => import('../views/Pexels.vue')
     }
   ]
 })
